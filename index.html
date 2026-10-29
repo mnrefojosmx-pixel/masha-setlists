@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#161514">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Setlists">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>:root{padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>Másha Setlists</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@400;500&display=swap">
+<style>
+/* Layout: two-column work surface, controls left (sticky on wide screens), set cards right; stacks on phones. Brand: off-white paper, ink black, one brass accent. */
+:root{
+  --paper:#F3F1EC; --surface:#FBFAF7; --ink:#161514; --muted:#6E6A63; --line:#DCD8D0;
+  --brass:#8A6A35; --ok:#3F6B4A; --warn:#A0602A;
+  --serif:"Lora", "Libre Baskerville", Georgia, serif;
+  --sans:"Jost", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#141312; --surface:#1C1B19; --ink:#ECE8E0; --muted:#9C978E; --line:#34312D;
+  --brass:#C9A66B; --ok:#7FB08A; --warn:#D9965A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141312; --surface:#1C1B19; --ink:#ECE8E0; --muted:#9C978E; --line:#34312D;
+  --brass:#C9A66B; --ok:#7FB08A; --warn:#D9965A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:40px 64px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;
+  padding-bottom:24px;border-bottom:1px solid var(--line);margin-bottom:32px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{font-weight:400;font-size:2.4rem;letter-spacing:.01em;margin:0;line-height:1.1}
+.brand p{margin:0;font-family:var(--sans);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.event{display:flex;flex-direction:column;gap:4px;min-width:0;flex:0 1 300px}
+label.cap,.cap{font-family:var(--sans);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+input[type=text],select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+  border-radius:2px;padding:8px 10px;width:100%}
+input[type=text]:focus,select:focus,button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+
+.grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+aside.controls{display:flex;flex-direction:column;gap:22px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+@media (max-width:860px){aside.controls{position:static}}
+.group{display:flex;flex-direction:column;gap:8px}
+.group .head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.clear{font-family:var(--sans);font-size:.72rem;color:var(--muted);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--sans);font-size:.8rem;background:transparent;color:var(--ink);border:1px solid var(--line);
+  border-radius:999px;padding:5px 12px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{font-family:var(--sans);font-size:.82rem;background:transparent;color:var(--ink);border:0;border-right:1px solid var(--line);padding:8px 6px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.hint{font-family:var(--sans);font-size:.74rem;color:var(--muted);margin:0}
+.fixed{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fixed b{font-weight:500;font-size:1.1rem}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font-family:var(--sans);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  border:1px solid var(--ink);border-radius:2px;padding:10px 16px;background:var(--ink);color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{opacity:.88}
+.pool{font-family:var(--sans);font-size:.78rem;color:var(--muted)}
+.pool b{color:var(--ink);font-weight:500}
+
+main{display:flex;flex-direction:column;gap:28px;min-width:0}
+.notice{font-family:var(--sans);font-size:.82rem;border:1px solid var(--warn);color:var(--warn);padding:10px 14px;border-radius:2px}
+.set{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:24px 24px 18px}
+@media (max-width:520px){.set{padding:18px 14px 14px}}
+.set-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.set-head h2{margin:0;font-weight:400;font-size:1.6rem;font-style:italic}
+.total{font-family:var(--sans);font-size:.82rem;display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+.pill{font-family:var(--sans);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)} .pill.short,.pill.long{color:var(--warn)}
+.bar{height:2px;background:var(--line);margin:8px 0 14px;position:relative}
+.bar span{position:absolute;inset:0 auto 0 0;background:var(--brass)}
+ol.songs{list-style:none;margin:0;padding:0;counter-reset:n}
+ol.songs li{counter-increment:n;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 12px;align-items:center;
+  padding:10px 0;border-top:1px solid var(--line)}
+ol.songs li::before{content:counter(n);font-family:var(--sans);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.t{min-width:0}
+.t .name{font-size:1.02rem}
+.t .meta{font-family:var(--sans);font-size:.74rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:2px 10px;font-variant-numeric:tabular-nums}
+.tag{color:var(--brass)}
+.dur{font-family:var(--sans);font-size:.82rem;font-variant-numeric:tabular-nums;justify-self:end}
+.row-tools{grid-column:2 / 4;grid-row:2;display:flex;gap:4px;flex-wrap:wrap}
+.dur{grid-column:3;grid-row:1}
+.tool{font-family:var(--sans);font-size:.7rem;color:var(--muted);background:none;border:1px solid transparent;border-radius:2px;padding:2px 6px;cursor:pointer}
+.tool:hover{color:var(--ink);border-color:var(--line)}
+@media (min-width:640px){
+  ol.songs li{grid-template-columns:28px minmax(0,1fr) auto auto}
+  .row-tools{grid-column:auto;grid-row:auto}
+  .dur{grid-column:auto;grid-row:auto}
+}
+@media (min-width:640px) and (hover:hover){
+  .row-tools{opacity:0;transition:opacity .15s}
+  ol.songs li:hover .row-tools, ol.songs li:focus-within .row-tools{opacity:1}
+}
+.add{display:flex;gap:8px;margin-top:12px;align-items:center}
+.add select{font-family:var(--sans);font-size:.82rem}
+.copybar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.copybar p{margin:0}
+details.catalog{border-top:1px solid var(--line);padding-top:20px;margin-top:12px}
+details.catalog summary{cursor:pointer;font-size:1.15rem;font-style:italic}
+.tablebox{overflow-x:auto;margin-top:14px}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.8rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:500;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-size:.68rem}
+td.title{font-family:var(--serif);font-size:.92rem}
+.foot{font-family:var(--sans);font-size:.74rem;color:var(--muted);margin-top:24px}
+.share{display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+a.btn{text-decoration:none;display:inline-block}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(10,10,10,.72);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;
+  padding-block:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.modal-box{background:var(--surface);color:var(--ink);border-radius:2px;padding:16px;max-width:520px;width:100%;display:flex;flex-direction:column;gap:12px}
+.modal-box img{width:100%;height:auto;display:block;border:1px solid var(--line);-webkit-touch-callout:default}
+.toast{z-index:30;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);
+  font-family:var(--sans);font-size:.82rem;padding:8px 16px;border-radius:2px}
+textarea.fallback{width:100%;height:160px;font-family:var(--sans);font-size:.8rem;background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+/* Teléfono y tablet: botones grandes y barra fija con las acciones principales */
+.nojs{font-family:var(--sans);font-size:.9rem;border:1px solid var(--warn);color:var(--warn);padding:12px 14px;border-radius:2px;margin-bottom:20px}
+.mbar{display:none}
+@media (max-width:860px){
+  .chip{padding:9px 14px;font-size:.88rem}
+  .seg button{padding:12px 6px;font-size:.9rem}
+  .tool{padding:6px 12px;font-size:.8rem;border-color:var(--line)}
+  input[type=text],select{font-size:16px}
+  .brand h1{font-size:2rem}
+  aside .actions{display:none}
+  .mbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--paper);border-top:1px solid var(--line);
+    padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));
+    padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+  .mbar .btn{flex:1;padding:14px 8px;text-align:center}
+  .wrap{padding-bottom:110px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="nojs" id="nojs">Esta vista no está ejecutando la página, por eso "Generar" no responde. Abre el link del generador en Safari o Chrome. Si abriste el archivo desde WhatsApp o desde Archivos, esa vista previa no funciona.</div>
+  <header class="top">
+    <div class="brand">
+      <h1>Másha Music</h1>
+      <p>Generador de setlists · Song Book oficial</p>
+    </div>
+    <div class="event">
+      <label class="cap" for="evento">Evento</label>
+      <input type="text" id="evento" placeholder="Ej. Boda en Todos Santos, cena de ensayo">
+    </div>
+  </header>
+
+  <div class="grid">
+    <aside class="controls" aria-label="Parámetros">
+      <div class="group">
+        <span class="cap">Arma el setlist</span>
+        <div class="seg" id="quien"></div>
+        <p class="hint" id="quienHint"></p>
+      </div>
+      <div class="group">
+        <span class="cap">Sets</span>
+        <div class="seg" id="sets"></div>
+      </div>
+      <div class="fixed"><span class="cap">Duración por set</span><b>45 min</b></div>
+      <div class="group">
+        <span class="cap">Formato</span>
+        <div class="seg" id="formato"></div>
+        <p class="hint" id="formatoHint"></p>
+      </div>
+      <div class="group">
+        <div class="head"><span class="cap">Género</span><button class="clear" data-clear="genero">Todos</button></div>
+        <div class="chips" id="genero"></div>
+      </div>
+      <div class="group">
+        <div class="head"><span class="cap">Tempo</span><button class="clear" data-clear="tempo">Todos</button></div>
+        <div class="chips" id="tempo"></div>
+      </div>
+      <div class="group">
+        <div class="head"><span class="cap">Tonalidad</span><button class="clear" data-clear="tono">Todas</button></div>
+        <div class="chips" id="modo"></div>
+        <div class="chips" id="tono"></div>
+      </div>
+      <div class="group">
+        <span class="cap">Voz</span>
+        <div class="seg" id="voz"></div>
+      </div>
+      <div class="group">
+        <label class="cap" for="pausa">Pausa entre temas</label>
+        <select id="pausa">
+          <option value="0">Sin pausa (segue)</option>
+          <option value="0.5" selected>30 segundos</option>
+          <option value="1">1 minuto</option>
+        </select>
+      </div>
+      <p class="pool" id="pool"></p>
+      <div class="actions">
+        <button class="btn" id="generar">Generar setlist</button>
+      </div>
+      <div class="share">
+        <span class="cap">Compartir por WhatsApp</span>
+        <div class="actions">
+          <button class="btn ghost" id="imagen">Imagen</button>
+          <button class="btn ghost" id="copiar">Copiar texto</button>
+          <a class="btn ghost" id="wa" href="https://wa.me/" target="_blank" rel="noopener">Abrir WhatsApp</a>
+        </div>
+        <p class="hint">La imagen se ve igual en cualquier teléfono. El texto llega con títulos en negrita.</p>
+      </div>
+    </aside>
+
+    <main>
+      <div id="notice" hidden></div>
+      <div id="out" style="display:flex;flex-direction:column;gap:28px"></div>
+      <div id="fallbackBox" hidden>
+        <p class="hint">No se pudo copiar automáticamente. Selecciona el texto y cópialo:</p>
+        <textarea class="fallback" id="fallback" readonly></textarea>
+      </div>
+
+      <details class="catalog">
+        <summary>Repertorio del Song Book (<span id="ncat"></span> temas)</summary>
+        <p class="hint" style="margin-top:10px">Song Book del 19/10/2026. Títulos, géneros, formas y las tonalidades sin asterisco vienen del Song Book. Las tonalidades con asterisco (*), el tempo, la duración, la voz y el formato son estimados. Las "Sugerencias futuras" no se incluyen.</p>
+        <div class="tablebox"><table id="cat"></table></div>
+      </details>
+      <p class="foot">Los tiempos son aproximados: en jazz la duración real depende de los solos. El generador cierra cada set entre 43:30 y 46:30.</p>
+    </main>
+  </div>
+</div>
+<div class="mbar" id="mbar" hidden><button class="btn" id="mGenerar" type="button">Generar</button><button class="btn ghost" id="mImagen" type="button">Imagen</button><button class="btn ghost" id="mCopiar" type="button">Copiar</button></div>
+<div class="toast" id="toast" hidden></div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-label="Imagen del setlist">
+  <div class="modal-box">
+    <p class="hint" style="font-size:.85rem;color:var(--ink)">En el teléfono, mantén presionada la imagen y elige <b>Compartir</b> o <b>Guardar imagen</b>, y luego envíala por WhatsApp. En la computadora usa "Copiar imagen" y pégala en el chat.</p>
+    <img id="shot" alt="Setlist de Másha Music">
+    <div class="actions">
+      <button class="btn" id="copyImg">Copiar imagen</button>
+      <button class="btn ghost" id="closeModal">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Song Book 19/10/2026. [título, géneros, tonalidad, tonalidad del Song Book?, bpm, tempo, duración (min), voz, apto trío, forma]
+// Títulos, géneros, tonalidades marcadas true y formas vienen del Song Book. El resto: estimados.
+const SW="Standards / Swing", BAL="Ballad", BOP="Bebop / Hard Bop", MOD="Modal / Modern Jazz", BLU="Blues", LAT="Bossa / Latin", POP="Soul / Pop Groove", BOL="Bolero / Canción";
+const RAW = [
+ ["A Foggy Day",[SW],"F",false,140,"Medio",5,true,true],
+ ["All Of Me",[SW],"F",true,130,"Medio",4.5,true,true],
+ ["Autumn Leaves",[SW],"Am",true,120,"Medio",6,true,true],
+ ["Cheek To Cheek",[SW],"F",true,160,"Medio",4.5,true,true],
+ ["Days Of Wine And Roses",[SW],"F",false,120,"Medio",5,true,true],
+ ["East Of The Sun",[SW],"C",true,130,"Medio",5,true,true,"intro / tema / outro"],
+ ["Fly Me To The Moon",[SW],"F",true,120,"Medio",4,true,true],
+ ["Too Marvelous For Words",[SW],"Bb",true,150,"Medio",4.5,true,true,"intro / tema / hits head out / outro"],
+ ["Lullaby Of Birdland",[SW],"Bm",true,160,"Medio",5,true,true,"intro / tema / trends / outro"],
+ ["Moonglow",[SW],"Ab",true,110,"Medio",4.5,true,true],
+ ["Summertime",[SW],"Bb",true,100,"Medio",5,true,true],
+ ["Night And Day",[SW],"Ab",true,140,"Medio",5,true,true,"verse / tema / head out / tag"],
+ ["Take Five",[SW],"Ebm",true,172,"Rápido",6,false,true],
+ ["Softly As In A Morning Sunrise",[SW],"Gm",true,150,"Medio",6,true,true],
+ ["On The Sunny Side Of The Street",[SW],"C",false,120,"Medio",4.5,true,true],
+ ["It Don't Mean A Thing",[SW],"F",true,200,"Rápido",4.5,true,true],
+ ["What Is This Thing Called Love",[SW],"E",true,220,"Rápido",5,true,true],
+ ["It Could Happen To You",[SW],"C",true,140,"Medio",5,true,true],
+ ["Stella By Starlight",[SW],"Bb",false,130,"Medio",5,true,true],
+
+ ["Body And Soul",[BAL],"Ab",true,60,"Balada",6,true,true],
+ ["Misty",[BAL],"C",true,65,"Balada",5,true,true],
+ ["My Funny Valentine",[BAL],"Am",true,60,"Balada",5.5,true,true,"intro piano / tema / head out desde B / outro ritardando"],
+ ["Moonlight Serenade",[BAL],"C",true,70,"Balada",4.5,true,true],
+ ["I Should Care",[BAL],"C",true,70,"Balada",5,true,true,"outro descendiente"],
+ ["My One And Only Love",[BAL],"Ab",true,62,"Balada",5,true,true],
+ ["Embraceable You",[BAL],"G",false,65,"Balada",4.5,true,true],
+
+ ["Anthropology",[BOP],"Bb",false,260,"Rápido",5,false,false],
+ ["Four",[BOP],"Eb",false,200,"Rápido",5,false,true],
+ ["In Walked Bud",[BOP],"Am",true,170,"Medio",5,false,true],
+ ["Mercy, Mercy, Mercy",[BOP],"Bb",false,80,"Medio",6,false,true],
+ ["Rhythm-A-Ning",[BOP],"Bb",false,220,"Rápido",5,false,true],
+ ["This I Dig Of You",[BOP],"Ab",false,230,"Rápido",6,false,false],
+ ["Well You Needn't",[BOP],"Eb",true,180,"Rápido",5,false,true],
+ ["All The Things You Are",[BOP],"Ab",false,160,"Medio",5,true,true],
+ ["There Will Never Be Another You",[BOP],"Eb",false,180,"Rápido",4.5,true,true],
+ ["Yardbird Suite",[BOP],"C",false,200,"Rápido",5,false,true],
+
+ ["Black Nile",[MOD],"Gm",false,220,"Rápido",6,false,false],
+ ["Cantaloupe Island",[MOD],"Fm",false,115,"Medio",6,false,true],
+ ["Watermelon Man",[MOD],"F",false,130,"Medio",5,false,true],
+ ["Chameleon",[MOD],"Bbm",false,100,"Medio",6,false,true],
+ ["Equinox",[MOD,BLU],"C#m",false,130,"Medio",6,false,true],
+ ["Footprints",[MOD],"Cm",false,160,"Medio",6,false,true],
+ ["Impressions",[MOD],"Dm",false,280,"Rápido",6,false,true],
+ ["Moment's Notice",[MOD],"Eb",false,250,"Rápido",5,false,false],
+ ["Question And Answer",[MOD],"Ebm",false,200,"Rápido",6,false,true],
+ ["So What",[MOD],"Dm",false,140,"Medio",6,false,true],
+ ["Two Moon",[MOD],null,false,120,"Medio",5,false,true],
+ ["Moanin'",[MOD],"Fm",false,130,"Medio",5,false,false],
+ ["Sing A Song Of Song",[MOD],null,false,150,"Medio",6,false,true],
+ ["Blue Train",[MOD],"Eb",false,140,"Medio",6,false,false],
+ ["Milestones",[MOD],"Gm",false,230,"Rápido",5,false,true],
+ ["Nardis",[MOD],"Em",false,150,"Medio",6,false,true],
+ ["Stablemates",[MOD],"A",true,170,"Medio",5,false,true],
+
+ ["Billie's Bounce",[BLU],"F",false,180,"Rápido",5,false,true],
+ ["Sandu",[BLU],"Eb",false,120,"Medio",6,false,true],
+ ["Stolen Moments",[BLU],"Cm",false,110,"Medio",6,false,true],
+ ["Straight No Chaser",[BLU],"F",false,170,"Medio",5,false,true],
+ ["Tenor Madness",[BLU],"Bb",false,200,"Rápido",6,false,false],
+ ["Freddie Freeloader",[BLU],"Bb",false,130,"Medio",6,false,true],
+ ["Blue Monk",[BLU],"Bb",false,120,"Medio",5,false,true],
+ ["Birk's Works",[BLU],"Fm",false,120,"Medio",5,false,true],
+ ["Now's The Time",[BLU],"F",false,160,"Medio",5,false,true],
+ ["Work Song",[BLU],"Fm",false,150,"Medio",5,true,true],
+
+ ["Recordame",[LAT],"Am",false,150,"Medio",5,false,true],
+ ["Blue Bossa",[LAT],"Cm",false,140,"Medio",5,false,true],
+ ["Agua De Beber",[LAT],"Am",true,140,"Medio",4,true,true],
+ ["Triste",[LAT],"G",true,140,"Medio",4.5,true,true],
+ ["Corcovado",[LAT],"C",false,120,"Medio",4.5,true,true],
+ ["Insensatez",[LAT],"Abm",true,100,"Medio",4,true,true],
+ ["Recado",[LAT],"Dm",false,150,"Medio",4.5,true,true],
+ ["Dindi",[LAT],"Ab",true,80,"Balada",5,true,true],
+ ["The Girl From Ipanema",[LAT],"F",false,130,"Medio",4.5,true,true],
+ ["Wave",[LAT],"D",true,130,"Medio",5,true,true],
+ ["My Little Suede Shoes",[LAT],"Eb",false,190,"Rápido",4.5,false,true],
+ ["A Night In Tunisia",[LAT],"Dm",false,200,"Rápido",6,false,true],
+ ["Caravan",[LAT],"Fm",false,220,"Rápido",5,false,true],
+ ["St. Thomas",[LAT],"C",false,200,"Rápido",5,false,true],
+ ["On Green Dolphin Street",[LAT],"Eb",false,150,"Medio",5,true,true],
+
+ ["Feel Like Makin' Love",[POP],"Eb",true,75,"Balada",5,true,true],
+ ["Sunny",[POP],"Em",true,110,"Medio",4.5,true,true],
+ ["Glory Box",[POP],"Gm",false,60,"Balada",5,true,true],
+ ["I Wish",[POP],"Ebm",true,106,"Medio",5,true,true],
+ ["Isn't She Lovely",[POP],"C#m",false,120,"Medio",4.5,true,true],
+ ["Just The Two Of Us",[POP],"Db",true,96,"Medio",5,true,true],
+ ["Crazy Race",[POP],"Db",true,95,"Medio",5,true,true],
+ ["Happy People",[POP],"Am",true,110,"Medio",4.5,true,true],
+ ["Smooth Operator",[POP],"Dm",true,120,"Medio",4.5,true,true],
+ ["Fever",[POP],"Am",true,100,"Medio",4,true,true],
+ ["Teardrop",[POP],"A",false,77,"Balada",5,true,true],
+ ["Trust",[POP],null,false,70,"Balada",4.5,true,true],
+ ["Something About Us",[POP],"Am",true,100,"Medio",4,true,true],
+ ["Dreams",[POP],"F",true,120,"Medio",4.5,true,true],
+ ["Can't Get You Out Of My Head",[POP],"Dm",true,126,"Medio",4,true,true],
+ ["Gravity",[POP],"A",true,62,"Balada",5,true,true],
+ ["Hit The Road Jack",[POP],"Abm",true,170,"Medio",3.5,true,true],
+ ["How Deep Is Your Love (Scary Pockets)",[POP],"F",true,100,"Medio",4.5,true,true],
+ ["How Deep Is Your Love (Bee Gees)",[POP],"F",true,105,"Medio",4,true,true],
+ ["Kangaroo Court",[POP],"Fm",true,110,"Medio",4,true,true],
+ ["Locked Out Of Heaven",[POP],"Cm",true,144,"Medio",4,true,true],
+ ["Music Sounds Better",[POP],"Bb",true,124,"Medio",4.5,true,true],
+ ["Please Don't Stop The Music",[POP],"Ab",true,118,"Medio",4.5,true,true],
+
+ ["Piel Canela",[BOL],"C",true,90,"Balada",4,true,true],
+ ["Perfidia",[BOL],"C",true,100,"Medio",4,true,true],
+ ["Sabor A Mí",[BOL],"A",true,80,"Balada",4,true,true],
+ ["Bésame Mucho",[BOL],"Fm",true,90,"Balada",4.5,true,true],
+ ["Quizás, Quizás, Quizás",[BOL],"Am",true,110,"Medio",3.5,true,true]
+];
+// Blues de forma (12 compases) que en el Song Book están en otras secciones
+const BLUES_FORM = ["Blue Train"];
+const BOSSA = ["Recordame","Blue Bossa","Agua De Beber","Triste","Corcovado","Insensatez","Recado","Dindi","The Girl From Ipanema","Wave"];
+const HARDBOP = ["Moment's Notice","Tenor Madness","Billie's Bounce","Black Nile","Milestones"];
+const GROOVE = ["Cantaloupe Island","Watermelon Man","Chameleon","Mercy, Mercy, Mercy","A Night In Tunisia","Caravan"];
+let IVAN_VARIANTS=[[0,0],[1,1],[0,1],[1,0]];
+const SONGS = RAW.map((r,i)=>({id:i,title:r[0],genres:r[1],key:r[2],keyOfficial:r[3],bpm:r[4],tempo:r[5],dur:r[6],vocal:r[7],trio:r[8],form:r[9]||"",
+  blues:r[1].includes("Blues")||BLUES_FORM.includes(r[0]),
+  latin:r[1].includes("Bossa / Latin")||r[0]==="St. Thomas"}));
+
+// Reglas de cada músico: secuencia de huecos; "extra" rellena hasta 45 min alternando
+const SLOTS = {
+  medUp:{label:"Medium up", test:s=>s.tempo!=="Balada"&&s.bpm>=140&&s.bpm<=200},
+  blues:{label:"Blues", test:s=>s.blues},
+  balada:{label:"Balada", test:s=>s.tempo==="Balada"},
+  latin:{label:"Latin", test:s=>s.latin},
+  medio:{label:"Medium", test:s=>s.tempo==="Medio"&&s.bpm>=90&&s.bpm<140},
+  up:{label:"Uptempo", test:s=>s.bpm>=180},
+  pop:{label:"Pop", test:s=>s.genres.includes("Soul / Pop Groove")},
+  medSwing:{label:"Medium swing", test:s=>s.tempo==="Medio"&&(s.genres.includes("Standards / Swing")||s.genres.includes("Bebop / Hard Bop"))},
+  bossa:{label:"Bossa nova", test:s=>BOSSA.includes(s.title)},
+  mEntrada:{label:"Entrada con todo", test:s=>s.tempo!=="Balada"&&s.bpm>=160},
+  mSwingVoz:{label:"Medium swing", test:s=>s.tempo==="Medio"&&s.bpm>=100&&s.bpm<=160&&[SW,BOP].some(g=>s.genres.includes(g)), prefer:s=>s.vocal&&s.genres.includes(SW)},
+  mLatinBlues:{label:"Latin o blues", test:s=>(s.latin||s.blues)&&s.tempo!=="Balada", prefer:s=>s.vocal},
+  mCancion:{label:"Canción o blues", test:s=>(s.latin||s.blues||s.genres.includes(POP)||s.genres.includes(BOL))&&s.tempo!=="Balada"},
+  mRitmo:{label:"Con ritmo", test:s=>s.tempo!=="Balada"&&s.bpm>=140&&s.bpm<200},
+  mCierre:{label:"Cierre bebop", test:s=>s.bpm>=180&&(s.genres.includes(BOP)||HARDBOP.includes(s.title)), fallback:"up"},
+  opener:{label:"Apertura amable", test:s=>(s.blues||SLOTS.medSwing.test(s))&&s.key&&!isMinor(s.key)&&s.tempo!=="Balada"&&s.bpm<=170},
+  minorStd:{label:"Standard menor", test:s=>s.key&&isMinor(s.key)&&s.tempo!=="Balada"&&s.bpm>=120&&s.bpm<=230&&[SW,BOP].some(g=>s.genres.includes(g))},
+  song:{label:"Ritmo canción", test:s=>s.latin&&s.tempo!=="Balada"},
+  groove:{label:"Groove", test:s=>GROOVE.includes(s.title)||(s.genres.includes(POP)&&s.tempo!=="Balada")}
+};
+const RULES = {
+  Mariano:{seq:["mEntrada","mSwingVoz","mLatinBlues","balada","mCancion","mRitmo"], extra:["mCancion","mRitmo","mSwingVoz"], closer:"mCierre",
+    hint:"Entrada con todo (uptempo o medium up con ritmo) → medium swing suave, con voz → latin o blues, con voz si se puede → balada → canción o blues → algo con ritmo → cierre uptempo bebop / hard bop."},
+  Sharon:{seq:["blues","medSwing","balada","blues","bossa","up"], extra:["blues","medSwing","bossa","up"], rising:true,
+    hint:"Blues → medium swing → balada → blues → bossa nova → uptempo, y repite la rueda. El mood arranca tranquilo y sube de a poco."},
+  // Iván: 2↔3 y 5↔6 intercambiables; cada set usa una variante distinta
+  Iván:{seq:n=>{ const v=IVAN_VARIANTS[n%4]; return ["opener", ...(v[0]?["song","minorStd"]:["minorStd","song"]), "balada", ...(v[1]?["up","groove"]:["groove","up"])]; },
+    extra:n=>[["minorStd","song","groove","up"],["song","groove","minorStd","up"],["groove","minorStd","song","up"]][n%3],
+    hint:"Blues o medium swing mayor → standard menor → ritmo canción (latin, bossa, samba) → balada → groove (2nd line, afro) → uptempo. El 2 y el 3, y el 5 y el 6, se intercambian, y cada set usa un orden distinto."},
+  Libre:{seq:null, hint:"Orden automático: abre en medio, baladas al centro, cierra con el tema más rápido."}
+};
+const GENRES = ["Standards / Swing","Ballad","Bebop / Hard Bop","Modal / Modern Jazz","Blues","Bossa / Latin","Soul / Pop Groove","Bolero / Canción"];
+const TEMPOS = ["Balada","Medio","Rápido"];
+const ORDER = ["C","Db","D","Eb","E","F","F#","G","Ab","A","Bb","B"];
+const isMinor = k => !!k && k.endsWith("m");
+const root = k => k.replace(/m$/,"");
+const KEYS = [...new Set(SONGS.map(s=>s.key).filter(Boolean))].sort((a,b)=>{
+  if(isMinor(a)!==isMinor(b)) return isMinor(a)?1:-1;
+  const ia=ORDER.indexOf(root(a)), ib=ORDER.indexOf(root(b));
+  return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b);
+});
+const TARGET = 45, TOL = 1.5;
+
+const state = {quien:"Mariano", sets:2,formato:"Cuarteto", genero:[], tempo:[], modo:[], tono:[], voz:"Mixto", pausa:0.5, evento:"", result:[]};
+try{ const s = JSON.parse(localStorage.getItem("masha-setlists-20261019")||"null"); if(s) Object.assign(state, s); }catch(e){}
+function save(){ try{ localStorage.setItem("masha-setlists-20261019", JSON.stringify(state)); }catch(e){} }
+
+const $ = id => document.getElementById(id);
+const fmt = m => { const t=Math.round(m*60); return Math.floor(t/60)+":"+String(t%60).padStart(2,"0"); };
+const keyLabel = k => k ? k.replace("b","♭").replace("#","♯").replace(/m$/," menor") : "s/d";
+
+function seg(el, opts, key, labels){
+  el.innerHTML = "";
+  opts.forEach((o,i)=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=labels?labels[i]:o;
+    b.setAttribute("aria-pressed", String(state[key]===o));
+    b.onclick=()=>{ state[key]=o; renderControls(); generate(); };
+    el.appendChild(b);
+  });
+}
+function chips(el, opts, key, labeler){
+  el.innerHTML="";
+  opts.forEach(o=>{
+    const b=document.createElement("button"); b.type="button"; b.className="chip"; b.textContent=labeler?labeler(o):o;
+    b.setAttribute("aria-pressed", String(state[key].includes(o)));
+    b.onclick=()=>{ const a=state[key]; const i=a.indexOf(o); i<0?a.push(o):a.splice(i,1); renderControls(); generate(); };
+    el.appendChild(b);
+  });
+}
+function renderControls(){
+  seg($("quien"),["Mariano","Sharon","Iván","Libre"],"quien");
+  $("quienHint").textContent = RULES[state.quien].hint;
+  seg($("sets"),[1,2,3],"sets",["1 set","2 sets","3 sets"]);
+  seg($("formato"),["Trío","Cuarteto"],"formato",["Trío","Cuarteto + saxo"]);
+  $("formatoHint").textContent = state.formato==="Trío"
+    ? "Piano y voz, contrabajo, batería. Deja fuera los temas de cabeza para saxo."
+    : "Suma saxo (soprano / tenor). Todo el repertorio disponible.";
+  chips($("genero"),GENRES,"genero");
+  chips($("tempo"),TEMPOS,"tempo");
+  chips($("modo"),["Mayor","Menor"],"modo");
+  chips($("tono"),KEYS,"tono",k=>k.replace("b","♭").replace("#","♯"));
+  seg($("voz"),["Mixto","Con voz","Instrumental"],"voz");
+  $("pausa").value=String(state.pausa);
+  $("evento").value=state.evento;
+  $("pool").innerHTML = `<b>${pool().length}</b> temas cumplen los filtros · se necesitan ≈ ${Math.ceil(state.sets*TARGET/5.2)} para ${state.sets} ${state.sets>1?"sets":"set"}`;
+  save();
+}
+document.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.clear; state[k]=[]; if(k==="tono") state.modo=[]; renderControls(); generate();
+});
+$("pausa").onchange=e=>{ state.pausa=parseFloat(e.target.value); renderControls(); generate(); };
+$("evento").oninput=e=>{ state.evento=e.target.value; save(); updateWa(); };
+
+function matches(s){
+  if(state.formato==="Trío" && !s.trio) return false;
+  if(state.genero.length && !s.genres.some(g=>state.genero.includes(g))) return false;
+  if(state.tempo.length && !state.tempo.includes(s.tempo)) return false;
+  if(state.modo.length || state.tono.length){
+    const byKey = state.tono.length && s.key && state.tono.includes(s.key);
+    const byMode = state.modo.length && s.key && state.modo.includes(isMinor(s.key)?"Menor":"Mayor");
+    if(!byKey && !byMode) return false;
+  }
+  if(state.voz==="Con voz" && !s.vocal) return false;
+  if(state.voz==="Instrumental" && s.vocal) return false;
+  return true;
+}
+const pool = () => SONGS.filter(matches);
+const setTime = items => items.reduce((t,it,i)=>t+SONGS[it.id].dur+(i?state.pausa:0),0);
+
+function pickWeighted(cands, picks){
+  const gCount={}, last=picks.slice(-2).map(id=>SONGS[id]);
+  picks.forEach(id=>SONGS[id].genres.forEach(g=>gCount[g]=(gCount[g]||0)+1));
+  const w = cands.map(s=>{
+    let x = 1/(1+Math.min(...s.genres.map(g=>gCount[g]||0)));
+    if(last.length===2 && last.every(l=>l.tempo===s.tempo)) x*=.3;
+    if(s.tempo==="Balada" && picks.filter(id=>SONGS[id].tempo==="Balada").length>=2) x*=.25;
+    return x*(0.6+Math.random());
+  });
+  let r=Math.random()*w.reduce((a,b)=>a+b,0);
+  for(let i=0;i<cands.length;i++){ r-=w[i]; if(r<=0) return cands[i]; }
+  return cands[cands.length-1];
+}
+
+function arrange(ids){
+  if(ids.length<3) return ids;
+  let songs = ids.map(id=>SONGS[id]);
+  const nonBal = songs.filter(s=>s.tempo!=="Balada");
+  let closer = nonBal.length ? nonBal.reduce((a,b)=>b.bpm>a.bpm?b:a) : null;
+  let rest = songs.filter(s=>s!==closer);
+  const meds = rest.filter(s=>s.tempo==="Medio");
+  let opener = (meds.length?meds:rest.filter(s=>s.tempo!=="Balada")).sort((a,b)=>Math.abs(a.bpm-140)-Math.abs(b.bpm-140))[0] || rest[0];
+  rest = rest.filter(s=>s!==opener);
+  const bal = rest.filter(s=>s.tempo==="Balada");
+  let mid = rest.filter(s=>s.tempo!=="Balada").sort(()=>Math.random()-.5);
+  bal.forEach((b,i)=>{ const pos=Math.round((mid.length)*(i+1)/(bal.length+1)); mid.splice(pos,0,b); });
+  let out=[opener,...mid]; if(closer) out.push(closer);
+  for(let pass=0;pass<3;pass++) for(let i=1;i<out.length-1;i++){
+    if(out[i].key && out[i].key===out[i-1].key){ const j=i+1<out.length-1?i+1:null; if(j){ [out[i],out[j]]=[out[j],out[i]]; } }
+  }
+  return out.map(s=>s.id);
+}
+
+const timeOf = ids => setTime(ids.map(id=>({id})));
+function generateFree(p, used){
+  const picks=[]; let t=0;
+  while(true){
+    const room = TARGET+TOL - t - (picks.length?state.pausa:0);
+    const cands = p.filter(s=>!used.has(s.id) && s.dur<=room);
+    if(!cands.length || t>=TARGET-TOL) break;
+    // si ya estamos cerca, preferir el tema que mejor cierre el tiempo
+    let s;
+    const need = TARGET - t - (picks.length?state.pausa:0);
+    if(need < 7){ s = cands.slice().sort((a,b)=>Math.abs(a.dur-need)-Math.abs(b.dur-need))[0]; }
+    else s = pickWeighted(cands,picks);
+    picks.push(s.id); used.add(s.id); t=timeOf(picks);
+  }
+  return arrange(picks).map(id=>({id,slot:null}));
+}
+function generateRules(p, used, rule){
+  const items=[];
+  // closer: el tema de cierre se reserva primero y va siempre al final
+  let closerItem=null, reserve=0;
+  const room = () => TARGET+TOL - reserve - setTime(items) - (items.length?state.pausa:0);
+  const avail = sl => p.filter(s=>!used.has(s.id) && SLOTS[sl].test(s) && s.dur<=room());
+  const pick = (slot, bestFit) => {
+    const S=SLOTS[slot];
+    let c = avail(slot);
+    if(!c.length && S.fallback) c = avail(S.fallback);
+    if(!c.length) return false;
+    // prefer: si hay temas con voz (u otra preferencia), elegir entre esos
+    if(S.prefer){ const pc=c.filter(S.prefer); if(pc.length) c=pc; }
+    let s;
+    // rising: elige por bpm según el avance del set, para que el mood suba de a poco
+    const prog = Math.min(1, setTime(items)/TARGET);
+    if(bestFit){
+      const need=TARGET-setTime(items)-(items.length?state.pausa:0);
+      let cc=c;
+      if(rule.rising){ const sorted=c.slice().sort((a,b)=>a.bpm-b.bpm); cc=sorted.slice(Math.floor(sorted.length/2)); }
+      s=cc.sort((a,b)=>Math.abs(a.dur-need)-Math.abs(b.dur-need))[0];
+    }
+    else if(rule.rising){
+      const sorted=c.slice().sort((a,b)=>a.bpm-b.bpm);
+      const idx=Math.round(prog*(sorted.length-1) + (Math.random()-.5)*Math.min(2,sorted.length-1));
+      s=sorted[Math.max(0,Math.min(sorted.length-1,idx))];
+    }
+    else s = c[Math.floor(Math.random()*c.length)];
+    items.push({id:s.id,slot}); used.add(s.id); return true;
+  };
+  if(rule.closer && pick(rule.closer,false)){
+    closerItem=items.pop(); reserve=SONGS[closerItem.id].dur+state.pausa;
+  }
+  rule.seq.forEach(slot=>{ if(!pick(slot,false)) items.push({id:null,slot}); });
+  const filled = items.filter(it=>it.id!==null);
+  items.length=0; items.push(...filled);
+  let k=0, misses=0;
+  while(setTime(items)+reserve < TARGET-TOL && misses<rule.extra.length){
+    const slot = rule.extra[k++ % rule.extra.length];
+    const need = TARGET-reserve-setTime(items)-(items.length?state.pausa:0);
+    if(pick(slot, need<7)) misses=0; else misses++;
+  }
+  if(closerItem) items.push(closerItem);
+  // repair: si quedó corto, cambiar un tema por otro más largo del mismo paso
+  for(let i=items.length-1; i>=0 && setTime(items)<TARGET-TOL; i--){
+    const it=items[i], cur=SONGS[it.id], tot=setTime(items);
+    const c=p.filter(s=>!used.has(s.id) && SLOTS[it.slot].test(s) && s.dur>cur.dur && tot-cur.dur+s.dur<=TARGET+TOL)
+      .sort((x,y)=>Math.abs(tot-cur.dur+x.dur-TARGET)-Math.abs(tot-cur.dur+y.dur-TARGET));
+    if(c.length){ used.delete(it.id); used.add(c[0].id); items[i]={id:c[0].id,slot:it.slot}; }
+  }
+  const all=[...rule.seq, ...(rule.closer?[rule.closer]:[])];
+  return {items, missing: all.filter(sl=>!items.some(it=>it.slot===sl))};
+}
+let lastMissing=[];
+function generate(){
+  const p = pool(), used=new Set(), sets=[], rule=RULES[state.quien];
+  IVAN_VARIANTS=[[0,0],[1,1],[0,1],[1,0]].sort(()=>Math.random()-.5);
+  lastMissing=[];
+  for(let n=0;n<state.sets;n++){
+    if(rule.seq){ const r=generateRules(p,used,{...rule, seq:typeof rule.seq==="function"?rule.seq(n):rule.seq, extra:typeof rule.extra==="function"?rule.extra(n):rule.extra}); sets.push(r.items); r.missing.forEach(m=>lastMissing.push(`Set ${["I","II","III"][n]}: ${SLOTS[m].label}`)); }
+    else sets.push(generateFree(p,used));
+  }
+  state.result=sets; save(); renderSets();
+}
+
+function status(t){
+  if(t<TARGET-TOL) return ["short","Corto"];
+  if(t>TARGET+TOL) return ["long","Largo"];
+  return ["ok","45 min"];
+}
+function renderSets(){
+  setTimeout(updateWa,0);
+  const out=$("out"); out.innerHTML="";
+  const used=new Set(state.result.flat().map(it=>it.id));
+  const p=pool(), free=p.filter(s=>!used.has(s.id));
+  const short = state.result.some(ids=>setTime(ids)<TARGET-TOL);
+  const n=$("notice");
+  const msgs=[];
+  if(short) msgs.push(`Con estos filtros no alcanzan los temas para cubrir ${state.sets*45} minutos sin repetir (hay ${p.length}). Abre algún filtro de género, tempo o tonalidad, o cambia a cuarteto.`);
+  if(lastMissing.length) msgs.push(`No encontré tema para estos pasos de la regla: ${lastMissing.join(", ")}. Abre los filtros para completarlos.`);
+  if(msgs.length){ n.hidden=false; n.className="notice"; n.textContent=msgs.join(" "); } else n.hidden=true;
+
+  state.result.forEach((ids,si)=>{
+    const t=setTime(ids), [cls,lab]=status(t);
+    const sec=document.createElement("section"); sec.className="set";
+    sec.innerHTML=`<div class="set-head"><h2>Set ${["I","II","III"][si]}</h2>
+      <div class="total"><span>${ids.length} temas · ${fmt(t)}</span><span class="pill ${cls}">${lab}</span></div></div>
+      <div class="bar"><span style="width:${Math.min(100,t/TARGET*100)}%"></span></div>`;
+    const ol=document.createElement("ol"); ol.className="songs";
+    ids.forEach((it,i)=>{
+      const s=SONGS[it.id], li=document.createElement("li");
+      li.innerHTML=`<div class="t"><div class="name">${s.title}</div>
+        <div class="meta">${it.slot?`<span class="tag">${SLOTS[it.slot].label}</span>`:''}<span>${s.genres.join(" · ")}</span><span>${keyLabel(s.key)}${s.keyOfficial||!s.key?"":"*"}</span><span>${s.tempo} · ${s.bpm} bpm</span>${s.form?`<span>${s.form}</span>`:""}${s.vocal?'<span class="tag">voz</span>':''}${!s.trio?'<span class="tag">saxo</span>':''}</div></div>
+        <div class="row-tools">
+          <button class="tool" data-a="up" ${i===0?"disabled":""} aria-label="Subir">↑</button>
+          <button class="tool" data-a="down" ${i===ids.length-1?"disabled":""} aria-label="Bajar">↓</button>
+          <button class="tool" data-a="swap">Cambiar</button>
+          <button class="tool" data-a="del">Quitar</button>
+        </div>
+        <div class="dur">${fmt(s.dur)}</div>`;
+      li.querySelectorAll(".tool").forEach(b=>b.onclick=()=>act(b.dataset.a,si,i));
+      ol.appendChild(li);
+    });
+    sec.appendChild(ol);
+    if(free.length){
+      const add=document.createElement("div"); add.className="add";
+      const sel=document.createElement("select"); sel.id="add-"+si; sel.setAttribute("aria-label","Añadir tema al set "+(si+1));
+      sel.innerHTML=`<option value="">+ Añadir tema…</option>`+free.map(s=>`<option value="${s.id}">${s.title} · ${fmt(s.dur)}</option>`).join("");
+      sel.onchange=()=>{ if(sel.value!==""){ state.result[si].push({id:+sel.value,slot:null}); save(); renderSets(); } };
+      add.appendChild(sel); sec.appendChild(add);
+    }
+    out.appendChild(sec);
+  });
+}
+function act(a,si,i){
+  const ids=state.result[si];
+  if(a==="up"&&i>0) [ids[i-1],ids[i]]=[ids[i],ids[i-1]];
+  if(a==="down"&&i<ids.length-1) [ids[i+1],ids[i]]=[ids[i],ids[i+1]];
+  if(a==="del") ids.splice(i,1);
+  if(a==="swap"){
+    const used=new Set(state.result.flat().map(it=>it.id)), cur=SONGS[ids[i].id], slot=ids[i].slot;
+    const c=pool().filter(s=>!used.has(s.id) && (!slot || SLOTS[slot].test(s))).sort((x,y)=>(Math.abs(x.dur-cur.dur)+(x.tempo===cur.tempo?0:1.5))-(Math.abs(y.dur-cur.dur)+(y.tempo===cur.tempo?0:1.5))+(Math.random()-.5));
+    if(c.length) ids[i]={id:c[Math.floor(Math.random()*Math.min(3,c.length))].id,slot}; else toast("No quedan temas disponibles con estos filtros");
+  }
+  save(); renderSets();
+}
+
+function asText(){
+  const lines=["MÁSHA MUSIC — SETLIST"];
+  if(state.evento.trim()) lines.push(state.evento.trim());
+  if(state.quien!=="Libre") lines.push(`Setlist de ${state.quien}`);
+  lines.push(`Formato: ${state.formato==="Trío"?"Trío":"Cuarteto"} · ${state.sets} ${state.sets>1?"sets":"set"} de 45 min`,"");
+  state.result.forEach((ids,si)=>{
+    lines.push(`SET ${["I","II","III"][si]} (${fmt(setTime(ids))})`);
+    ids.forEach((it,i)=>{ const s=SONGS[it.id]; lines.push(`${i+1}. ${s.title} — ${s.key?s.key:"s/d"} · ${s.tempo} · ${fmt(s.dur)}${s.form?` [${s.form}]`:""}`); });
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+// Texto con formato de WhatsApp: *negrita*, _cursiva_
+function waText(){
+  const L=["*MÁSHA MUSIC · SETLIST*"];
+  if(state.evento.trim()) L.push("_"+state.evento.trim()+"_");
+  L.push(`${state.quien!=="Libre"?state.quien+" · ":""}${state.formato==="Trío"?"Trío":"Cuarteto"} · ${state.sets} ${state.sets>1?"sets":"set"} de 45 min`);
+  state.result.forEach((ids,si)=>{
+    L.push("",`*SET ${["I","II","III"][si]}* · ${fmt(setTime(ids))}`);
+    ids.forEach((it,i)=>{ const s=SONGS[it.id]; L.push(`${i+1}. ${s.title}${s.key?" · "+s.key:""}`); });
+  });
+  return L.join("\n");
+}
+function updateWa(){ $("wa").href="https://wa.me/?text="+encodeURIComponent(waText()); }
+
+function drawImage(){
+  const W=1080, P=88, ROW=62, cs=getComputedStyle(document.documentElement);
+  const C={paper:"#F3F1EC", ink:"#161514", muted:"#6E6A63", line:"#DCD8D0", brass:"#8A6A35"};
+  const serif='"Lora", Georgia, serif', sans='"Jost", "Helvetica Neue", Arial, sans-serif';
+  let H=P+150+(state.evento.trim()?52:0)+50;
+  state.result.forEach(ids=>{ H+=110+ids.length*ROW+30; });
+  H+=P;
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const g=cv.getContext("2d");
+  g.fillStyle=C.paper; g.fillRect(0,0,W,H);
+  let y=P;
+  g.fillStyle=C.ink; g.font=`400 76px ${serif}`; g.textBaseline="alphabetic"; g.fillText("Másha Music",P,y+64); y+=104;
+  g.fillStyle=C.muted; g.font=`500 22px ${sans}`;
+  const sub=("SETLIST · "+(state.quien!=="Libre"?state.quien.toUpperCase()+" · ":"")+(state.formato==="Trío"?"TRÍO":"CUARTETO")+" · "+state.sets+(state.sets>1?" SETS":" SET")+" DE 45 MIN").split("").join(String.fromCharCode(8202));
+  g.fillText(sub,P,y+24); y+=46;
+  if(state.evento.trim()){ g.fillStyle=C.ink; g.font=`italic 400 36px ${serif}`; g.fillText(state.evento.trim(),P,y+40); y+=52; }
+  y+=24; g.fillStyle=C.ink; g.fillRect(P,y,W-2*P,2); y+=26;
+  state.result.forEach((ids,si)=>{
+    y+=50;
+    g.fillStyle=C.ink; g.font=`italic 400 48px ${serif}`; g.fillText("Set "+["I","II","III"][si],P,y);
+    g.fillStyle=C.muted; g.font=`400 26px ${sans}`; g.textAlign="right"; g.fillText(ids.length+" temas · "+fmt(setTime(ids)),W-P,y); g.textAlign="left";
+    y+=40;
+    ids.forEach((it,i)=>{
+      const s=SONGS[it.id];
+      g.fillStyle=C.line; g.fillRect(P,y,W-2*P,1);
+      const base=y+42;
+      g.fillStyle=C.muted; g.font=`400 24px ${sans}`; g.fillText(String(i+1),P,base);
+      g.fillStyle=C.brass; g.textAlign="right"; g.fillText(s.key?s.key.replace("b","♭").replace("#","♯"):"",W-P,base); g.textAlign="left";
+      g.fillStyle=C.ink; g.font=`400 34px ${serif}`;
+      let t=s.title; const max=W-2*P-60-90;
+      while(g.measureText(t).width>max && t.length>4) t=t.slice(0,-2)+"…";
+      g.fillText(t,P+52,base);
+      y+=ROW;
+    });
+    g.fillStyle=C.line; g.fillRect(P,y,W-2*P,1); y+=30;
+  });
+  g.fillStyle=C.muted; g.font=`500 20px ${sans}`; g.fillText("mashamusiccontact@gmail.com",P,H-P+40);
+  return cv;
+}
+let shotCanvas=null;
+$("imagen").onclick=async()=>{
+  try{ await document.fonts.ready; }catch(e){}
+  shotCanvas=drawImage(); $("shot").src=shotCanvas.toDataURL("image/png"); $("modal").hidden=false;
+};
+$("closeModal").onclick=()=>{ $("modal").hidden=true; };
+$("modal").onclick=e=>{ if(e.target.id==="modal") $("modal").hidden=true; };
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") $("modal").hidden=true; });
+$("copyImg").onclick=()=>{
+  try{
+    const item=new ClipboardItem({"image/png":new Promise(r=>shotCanvas.toBlob(r,"image/png"))});
+    navigator.clipboard.write([item]).then(()=>toast("Imagen copiada"),()=>toast("No se pudo copiar. Mantén presionada la imagen para guardarla."));
+  }catch(e){ toast("No se pudo copiar. Mantén presionada la imagen para guardarla."); }
+};
+
+$("copiar").onclick=()=>{
+  const txt=waText();
+  const fb=()=>{ $("fallbackBox").hidden=false; $("fallback").value=txt; $("fallback").select(); };
+  try{ navigator.clipboard.writeText(txt).then(()=>toast("Setlist copiado"),fb); }catch(e){ fb(); }
+};
+$("generar").onclick=()=>{ generate(); if(window.innerWidth<860) $("out").scrollIntoView({behavior:"smooth",block:"start"}); };
+let tt; function toast(m){ const t=$("toast"); t.textContent=m; t.hidden=false; clearTimeout(tt); tt=setTimeout(()=>t.hidden=true,2200); }
+
+function renderCatalog(){
+  $("ncat").textContent=SONGS.length;
+  $("cat").innerHTML=`<thead><tr><th>Tema</th><th>Género</th><th>Tonalidad</th><th>Tempo</th><th>BPM</th><th>Duración</th><th>Voz</th><th>Trío</th><th>Forma</th></tr></thead><tbody>`+
+    SONGS.map(s=>`<tr><td class="title">${s.title}</td><td>${s.genres.join(" · ")}</td><td>${keyLabel(s.key)}${s.keyOfficial||!s.key?"":"*"}</td><td>${s.tempo}</td><td>${s.bpm}</td><td>${fmt(s.dur)}</td><td>${s.vocal?"Sí":"—"}</td><td>${s.trio?"Sí":"Solo cuarteto"}</td><td>${s.form||"—"}</td></tr>`).join("")+
+    `</tbody>`;
+}
+
+$("nojs").hidden=true; $("mbar").hidden=false;
+$("mGenerar").onclick=()=>$("generar").click();
+$("mImagen").onclick=()=>$("imagen").click();
+$("mCopiar").onclick=()=>$("copiar").click();
+renderControls(); renderCatalog();
+const valid = Array.isArray(state.result) && state.result.length===state.sets && state.result.every(a=>Array.isArray(a)&&a.every(it=>it&&SONGS[it.id]));
+valid ? renderSets() : generate();
+</script>
+
+<script>if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(()=>{});</script>
+</body>
+</html>
