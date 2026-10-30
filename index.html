@@ -230,7 +230,7 @@ textarea.fallback{width:100%;height:160px;font-family:var(--sans);font-size:.8re
         <p class="hint" style="margin-top:10px">Song Book del 19/10/2026. Títulos, géneros, formas y las tonalidades sin asterisco vienen del Song Book. Las tonalidades con asterisco (*), el tempo, la duración, la voz y el formato son estimados. Las "Sugerencias futuras" no se incluyen.</p>
         <div class="tablebox"><table id="cat"></table></div>
       </details>
-      <p class="foot">Los tiempos son aproximados: en jazz la duración real depende de los solos. El generador cierra cada set entre 43:30 y 46:30.</p>
+      <p class="foot">Versión 30/10/2026. Los tiempos son aproximados: en jazz la duración real depende de los solos. El generador cierra cada set entre 43:30 y 46:30.</p>
     </main>
   </div>
 </div>
@@ -765,6 +765,13 @@ const valid = Array.isArray(state.result) && state.result.length===state.sets &&
 valid ? renderSets() : generate();
 </script>
 
-<script>if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(()=>{});</script>
+<script>
+// Con internet carga siempre la última versión; sin internet usa la guardada.
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (!reloaded) { reloaded = true; location.reload(); } });
+  navigator.serviceWorker.register("sw.js").then(r => r.update()).catch(() => {});
+}
+</script>
 </body>
 </html>
