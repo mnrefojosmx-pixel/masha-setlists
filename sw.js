@@ -1,6 +1,6 @@
 // Guarda la app en el teléfono para que funcione sin internet.
 // La página se pide primero a la red (así llegan los cambios) y, si no hay conexión, sale de la copia guardada.
-const CACHE = "masha-setlists-202610300436";
+const CACHE = "masha-setlists-202610300437";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
