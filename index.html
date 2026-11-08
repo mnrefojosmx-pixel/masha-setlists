@@ -94,6 +94,12 @@ ol.songs li::before{content:counter(n);font-family:var(--sans);font-size:.78rem;
 .tag{color:var(--brass)}
 .dur{font-family:var(--sans);font-size:.82rem;font-variant-numeric:tabular-nums;justify-self:end}
 .row-tools{grid-column:2 / 4;grid-row:2;display:flex;gap:4px;flex-wrap:wrap}
+details.arr{margin-top:4px;font-family:var(--sans);font-size:.8rem}
+details.arr summary{cursor:pointer;color:var(--brass);list-style:none;display:inline-flex;align-items:center;gap:4px}
+details.arr summary::-webkit-details-marker{display:none}
+details.arr summary::before{content:"▸";font-size:.7rem}
+details.arr[open] summary::before{content:"▾"}
+details.arr .arr-body{margin-top:6px;padding:8px 10px;border-left:2px solid var(--brass);background:var(--paper);color:var(--ink);white-space:pre-line;line-height:1.5}
 .dur{grid-column:3;grid-row:1}
 .tool{font-family:var(--sans);font-size:.7rem;color:var(--muted);background:none;border:1px solid transparent;border-radius:2px;padding:2px 6px;cursor:pointer}
 .tool:hover{color:var(--ink);border-color:var(--line)}
@@ -230,7 +236,7 @@ textarea.fallback{width:100%;height:160px;font-family:var(--sans);font-size:.8re
         <p class="hint" style="margin-top:10px">Song Book del 19/10/2026. Títulos, géneros, formas y las tonalidades sin asterisco vienen del Song Book. Las tonalidades con asterisco (*), el tempo, la duración, la voz y el formato son estimados. Las "Sugerencias futuras" no se incluyen.</p>
         <div class="tablebox"><table id="cat"></table></div>
       </details>
-      <p class="foot">Versión 30/10/2026. Los tiempos son aproximados: en jazz la duración real depende de los solos. El generador cierra cada set entre 43:30 y 46:30.</p>
+      <p class="foot">Versión 08/11/2026. Los tiempos son aproximados: en jazz la duración real depende de los solos. El generador cierra cada set entre 43:30 y 46:30.</p>
     </main>
   </div>
 </div>
@@ -256,7 +262,7 @@ const RAW = [
  ["All Of Me",[SW],"F",true,130,"Medio",4.5,true,true],
  ["Autumn Leaves",[SW],"Am",true,120,"Medio",6,true,true],
  ["Cheek To Cheek",[SW],"F",true,160,"Medio",4.5,true,true],
- ["Days Of Wine And Roses",[SW],"F",false,120,"Medio",5,true,true],
+ ["Days Of Wine And Roses",[SW],"A",true,120,"Medio",5,true,true],
  ["East Of The Sun",[SW],"C",true,130,"Medio",5,true,true,"intro / tema / outro"],
  ["Fly Me To The Moon",[SW],"F",true,120,"Medio",4,true,true],
  ["Too Marvelous For Words",[SW],"Bb",true,150,"Medio",4.5,true,true,"intro / tema / hits head out / outro"],
@@ -266,7 +272,7 @@ const RAW = [
  ["Night And Day",[SW],"Ab",true,140,"Medio",5,true,true,"verse / tema / head out / tag"],
  ["Take Five",[SW],"Ebm",true,172,"Rápido",6,false,true],
  ["Softly As In A Morning Sunrise",[SW],"Gm",true,150,"Medio",6,true,true],
- ["On The Sunny Side Of The Street",[SW],"C",false,120,"Medio",4.5,true,true],
+ ["On The Sunny Side Of The Street",[SW],"F",true,120,"Medio",4.5,true,true],
  ["It Don't Mean A Thing",[SW],"F",true,200,"Rápido",4.5,true,true],
  ["What Is This Thing Called Love",[SW],"E",true,220,"Rápido",5,true,true],
  ["It Could Happen To You",[SW],"C",true,140,"Medio",5,true,true],
@@ -284,7 +290,7 @@ const RAW = [
  ["Four",[BOP],"Eb",false,200,"Rápido",5,false,true],
  ["In Walked Bud",[BOP],"Am",true,170,"Medio",5,false,true],
  ["Mercy, Mercy, Mercy",[BOP],"Bb",false,80,"Medio",6,false,true],
- ["Rhythm-A-Ning",[BOP],"Bb",false,220,"Rápido",5,false,true],
+ ["Rhythm-A-Ning",[BOP],"Bb",true,220,"Rápido",5,false,true],
  ["This I Dig Of You",[BOP],"Ab",false,230,"Rápido",6,false,false],
  ["Well You Needn't",[BOP],"Eb",true,180,"Rápido",5,false,true],
  ["All The Things You Are",[BOP],"Ab",false,160,"Medio",5,true,true],
@@ -328,11 +334,11 @@ const RAW = [
  ["Insensatez",[LAT],"Abm",true,100,"Medio",4,true,true],
  ["Recado",[LAT],"Dm",false,150,"Medio",4.5,true,true],
  ["Dindi",[LAT],"Ab",true,80,"Balada",5,true,true],
- ["The Girl From Ipanema",[LAT],"F",false,130,"Medio",4.5,true,true],
+ ["The Girl From Ipanema",[LAT],"Db",true,130,"Medio",4.5,true,true],
  ["Wave",[LAT],"D",true,130,"Medio",5,true,true],
  ["My Little Suede Shoes",[LAT],"Eb",false,190,"Rápido",4.5,false,true],
  ["A Night In Tunisia",[LAT],"Dm",false,200,"Rápido",6,false,true],
- ["Caravan",[LAT],"Fm",false,220,"Rápido",5,false,true],
+ ["Caravan",[LAT],"Fm",true,220,"Rápido",5,false,true],
  ["St. Thomas",[LAT],"C",false,200,"Rápido",5,false,true],
  ["On Green Dolphin Street",[LAT],"Eb",false,150,"Medio",5,true,true],
 
@@ -372,6 +378,18 @@ const BOSSA = ["Recordame","Blue Bossa","Agua De Beber","Triste","Corcovado","In
 const HARDBOP = ["Moment's Notice","Tenor Madness","Billie's Bounce","Black Nile","Milestones"];
 const GROOVE = ["Cantaloupe Island","Watermelon Man","Chameleon","Mercy, Mercy, Mercy","A Night In Tunisia","Caravan"];
 let IVAN_VARIANTS=[[0,0],[1,1],[0,1],[1,0]];
+// Arreglos de la banda: título exacto del Song Book → texto del arreglo (una sección por línea).
+// Si un tema no tiene arreglo aquí, se muestra la forma que trae el Song Book.
+const ARREGLOS = {
+  "Stablemates": "Intro: últimos 4 compases con break en el último compás\nCoda: repite x3 con calderones",
+  "Days Of Wine And Roses": "Intro: 8 compases, vamp pedal E7\nHead in: broken feel abierto\nSolo piano: 2 feel + swing\nHead out: AB broken abierto. Segunda A en 2 feel, C swing\nCoda: x3 + lick de Sharon",
+  "Caravan": "Intro: pedal afro\nFinal: x3",
+  "The Girl From Ipanema": "Intro: I – bII vamp\nHead in: sin kicks\nKicks solo en la última vuelta de Sharon y en el head out\nFinal: vamp",
+  "My One And Only Love": "Intro: piano\nFinal: calderones",
+  "Rhythm-A-Ning": "Sin arreglo. Final directo",
+  "On The Sunny Side Of The Street": "Intro: 8 compases de dominante\nFinal: coda extendida x3 + final Basie",
+  "It Don't Mean A Thing": "Intro: vamp burlesque\nKicks en la B\nFinal: repite frase"
+};
 const SONGS = RAW.map((r,i)=>({id:i,title:r[0],genres:r[1],key:r[2],keyOfficial:r[3],bpm:r[4],tempo:r[5],dur:r[6],vocal:r[7],trio:r[8],form:r[9]||"",
   blues:r[1].includes("Blues")||BLUES_FORM.includes(r[0]),
   latin:r[1].includes("Bossa / Latin")||r[0]==="St. Thomas"}));
@@ -409,6 +427,8 @@ const RULES = {
     hint:"Blues o medium swing mayor → standard menor → ritmo canción (latin, bossa, samba) → balada → groove (2nd line, afro) → uptempo. El 2 y el 3, y el 5 y el 6, se intercambian, y cada set usa un orden distinto."},
   Libre:{seq:null, hint:"Orden automático: abre en medio, baladas al centro, cierra con el tema más rápido."}
 };
+const arrOf = s => ARREGLOS[s.title] || s.form.split(" / ").join("\n");
+const esc = t => t.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const GENRES = ["Standards / Swing","Ballad","Bebop / Hard Bop","Modal / Modern Jazz","Blues","Bossa / Latin","Soul / Pop Groove","Bolero / Canción"];
 const TEMPOS = ["Balada","Medio","Rápido"];
 const ORDER = ["C","Db","D","Eb","E","F","F#","G","Ab","A","Bb","B"];
@@ -628,7 +648,7 @@ function renderSets(){
     ids.forEach((it,i)=>{
       const s=SONGS[it.id], li=document.createElement("li");
       li.innerHTML=`<div class="t"><div class="name">${s.title}</div>
-        <div class="meta">${it.slot?`<span class="tag">${SLOTS[it.slot].label}</span>`:''}<span>${s.genres.join(" · ")}</span><span>${keyLabel(s.key)}${s.keyOfficial||!s.key?"":"*"}</span><span>${s.tempo} · ${s.bpm} bpm</span>${s.form?`<span>${s.form}</span>`:""}${s.vocal?'<span class="tag">voz</span>':''}${!s.trio?'<span class="tag">saxo</span>':''}</div></div>
+        <div class="meta">${it.slot?`<span class="tag">${SLOTS[it.slot].label}</span>`:''}<span>${s.genres.join(" · ")}</span><span>${keyLabel(s.key)}${s.keyOfficial||!s.key?"":"*"}</span><span>${s.tempo} · ${s.bpm} bpm</span>${s.vocal?'<span class="tag">voz</span>':''}${!s.trio?'<span class="tag">saxo</span>':''}</div>${arrOf(s)?`<details class="arr"><summary>Arreglo</summary><div class="arr-body">${esc(arrOf(s))}</div></details>`:""}</div>
         <div class="row-tools">
           <button class="tool" data-a="up" ${i===0?"disabled":""} aria-label="Subir">↑</button>
           <button class="tool" data-a="down" ${i===ids.length-1?"disabled":""} aria-label="Bajar">↓</button>
