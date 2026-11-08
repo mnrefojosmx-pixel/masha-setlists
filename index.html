@@ -277,6 +277,7 @@ const RAW = [
  ["What Is This Thing Called Love",[SW],"E",true,220,"Rápido",5,true,true],
  ["It Could Happen To You",[SW],"C",true,140,"Medio",5,true,true],
  ["Stella By Starlight",[SW],"Bb",false,130,"Medio",5,true,true],
+ ["What A Difference A Day Made",[SW],"C",true,100,"Medio",4.5,true,true],
 
  ["Body And Soul",[BAL],"Ab",true,60,"Balada",6,true,true],
  ["Misty",[BAL],"C",true,65,"Balada",5,true,true],
@@ -388,6 +389,7 @@ const ARREGLOS = {
   "My One And Only Love": "Intro: piano\nFinal: calderones",
   "Rhythm-A-Ning": "Sin arreglo. Final directo",
   "On The Sunny Side Of The Street": "Intro: 8 compases de dominante\nFinal: coda extendida x3 + final Basie",
+  "What A Difference A Day Made": "Intro: piano, con ritmo en manos contra\nEntra la banda en la segunda mitad\nFinal: calderón directo",
   "It Don't Mean A Thing": "Intro: vamp burlesque\nKicks en la B\nFinal: repite frase"
 };
 const SONGS = RAW.map((r,i)=>({id:i,title:r[0],genres:r[1],key:r[2],keyOfficial:r[3],bpm:r[4],tempo:r[5],dur:r[6],vocal:r[7],trio:r[8],form:r[9]||"",
@@ -442,8 +444,8 @@ const KEYS = [...new Set(SONGS.map(s=>s.key).filter(Boolean))].sort((a,b)=>{
 const TARGET = 45, TOL = 1.5;
 
 const state = {quien:"Mariano", sets:2,formato:"Cuarteto", genero:[], tempo:[], modo:[], tono:[], voz:"Mixto", pausa:0.5, evento:"", result:[]};
-try{ const s = JSON.parse(localStorage.getItem("masha-setlists-20261019")||"null"); if(s) Object.assign(state, s); }catch(e){}
-function save(){ try{ localStorage.setItem("masha-setlists-20261019", JSON.stringify(state)); }catch(e){} }
+try{ const s = JSON.parse(localStorage.getItem("masha-setlists-20261108")||"null"); if(s) Object.assign(state, s); }catch(e){}
+function save(){ try{ localStorage.setItem("masha-setlists-20261108", JSON.stringify(state)); }catch(e){} }
 
 const $ = id => document.getElementById(id);
 const fmt = m => { const t=Math.round(m*60); return Math.floor(t/60)+":"+String(t%60).padStart(2,"0"); };
